@@ -34,7 +34,7 @@ Results on the best and worst Pokémon species with SVC
 
 ![Confusion Matrix](fotosCasKaggle/AUC_worst.png)
 
-
+In order to get the final graphs, execute the whole code, and 2 graphs will appear in the directory automatically as HTML files.
 
 
 
