@@ -3,6 +3,10 @@ Python project about creating a program in order to identify the photos of a pok
 
 ![Confusion Matrix](fotosCasKaggle/pikachu_y_agumon.PNG)
 
+Data obtainable from:
+https://www.kaggle.com/datasets/bhawks/pokemon-generation-one-22k
+https://drive.google.com/drive/folders/1tmcdsoX67NvmAgtmGJgo6kb3N6SlJeLu
+
 ## Key Objectives:
 - Get predictions on which photo is a Pokemon or a Digimon.
 - Predict which Pokémon appears in the photo.
