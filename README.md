@@ -7,6 +7,8 @@ Data obtainable from:
 https://www.kaggle.com/datasets/bhawks/pokemon-generation-one-22k
 https://drive.google.com/drive/folders/1tmcdsoX67NvmAgtmGJgo6kb3N6SlJeLu
 
+Both zips must be unzipped, and the "images" zip must be saved us "digimon".
+
 ## Key Objectives:
 - Get predictions on which photo is a Pokemon or a Digimon.
 - Predict which Pokémon appears in the photo.
