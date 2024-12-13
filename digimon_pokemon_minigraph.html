@@ -1,0 +1,258 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "Abra", "image": "PokemonData\\Abra\\000-063Abra_RB.png", "label": "Abra", "shape": "image"}, {"color": "#97c2fc", "id": "Aerodactyl", "image": "PokemonData\\Aerodactyl\\000-142Aerodactyl_RB.png", "label": "Aerodactyl", "shape": "image"}, {"color": "#97c2fc", "id": "Alakazam", "image": "PokemonData\\Alakazam\\000-065Alakazam_RB.png", "label": "Alakazam", "shape": "image"}, {"color": "#97c2fc", "id": "Arbok", "image": "PokemonData\\Arbok\\000-024Arbok_RB.png", "label": "Arbok", "shape": "image"}, {"color": "#97c2fc", "id": "Arcanine", "image": "PokemonData\\Arcanine\\000-059Arcanine_RB.png", "label": "Arcanine", "shape": "image"}, {"color": "#97c2fc", "id": "Articuno", "image": "PokemonData\\Articuno\\000-144Articuno_RB.png", "label": "Articuno", "shape": "image"}, {"color": "#97c2fc", "id": "Beedrill", "image": "PokemonData\\Beedrill\\000-015Beedrill_RB.png", "label": "Beedrill", "shape": "image"}, {"color": "#97c2fc", "id": "Bellsprout", "image": "PokemonData\\Bellsprout\\000-069Bellsprout_Channel.png", "label": "Bellsprout", "shape": "image"}, {"color": "#97c2fc", "id": "Blastoise", "image": "PokemonData\\Blastoise\\000-009Blastoise_RB.png", "label": "Blastoise", "shape": "image"}, {"color": "#97c2fc", "id": "Bulbasaur", "image": "PokemonData\\Bulbasaur\\00000000.png", "label": "Bulbasaur", "shape": "image"}, {"color": "#97c2fc", "id": "Butterfree", "image": "PokemonData\\Butterfree\\000-012Butterfree_Channel.png", "label": "Butterfree", "shape": "image"}, {"color": "#97c2fc", "id": "Caterpie", "image": "PokemonData\\Caterpie\\000-010Caterpie_Channel.png", "label": "Caterpie", "shape": "image"}, {"color": "#97c2fc", "id": "Chansey", "image": "PokemonData\\Chansey\\000-113Chansey_Channel.png", "label": "Chansey", "shape": "image"}, {"color": "#97c2fc", "id": "Charizard", "image": "PokemonData\\Charizard\\000-006Charizard_RB.png", "label": "Charizard", "shape": "image"}, {"color": "#97c2fc", "id": "Charmander", "image": "PokemonData\\Charmander\\00000000.png", "label": "Charmander", "shape": "image"}, {"color": "#97c2fc", "id": "Charmeleon", "image": "PokemonData\\Charmeleon\\000-005Charmeleon_RB.png", "label": "Charmeleon", "shape": "image"}, {"color": "#97c2fc", "id": "Clefable", "image": "PokemonData\\Clefable\\000-036Clefable_RB.png", "label": "Clefable", "shape": "image"}, {"color": "#97c2fc", "id": "Clefairy", "image": "PokemonData\\Clefairy\\000-035Clefairy_C.png", "label": "Clefairy", "shape": "image"}, {"color": "#97c2fc", "id": "Cloyster", "image": "PokemonData\\Cloyster\\000-091Cloyster_RB.png", "label": "Cloyster", "shape": "image"}, {"color": "#97c2fc", "id": "Cubone", "image": "PokemonData\\Cubone\\000-104Cubone_Channel.png", "label": "Cubone", "shape": "image"}, {"color": "#97c2fc", "id": "Dewgong", "image": "PokemonData\\Dewgong\\000-087Dewgong_RB.png", "label": "Dewgong", "shape": "image"}, {"color": "#97c2fc", "id": "Diglett", "image": "PokemonData\\Diglett\\001-050Diglett_RB.png", "label": "Diglett", "shape": "image"}, {"color": "#97c2fc", "id": "Ditto", "image": "PokemonData\\Ditto\\001-132Ditto_Channel.png", "label": "Ditto", "shape": "image"}, {"color": "#97c2fc", "id": "Dodrio", "image": "PokemonData\\Dodrio\\000-085Dodrio_RB.png", "label": "Dodrio", "shape": "image"}, {"color": "#97c2fc", "id": "Doduo", "image": "PokemonData\\Doduo\\000-084Doduo_RB.png", "label": "Doduo", "shape": "image"}, {"color": "#97c2fc", "id": "Dragonair", "image": "PokemonData\\Dragonair\\000-148Dragonair_RB.png", "label": "Dragonair", "shape": "image"}, {"color": "#97c2fc", "id": "Dragonite", "image": "PokemonData\\Dragonite\\000-149Dragonite_RB.png", "label": "Dragonite", "shape": "image"}, {"color": "#97c2fc", "id": "Dratini", "image": "PokemonData\\Dratini\\000-147Dratini_RB.png", "label": "Dratini", "shape": "image"}, {"color": "#97c2fc", "id": "Drowzee", "image": "PokemonData\\Drowzee\\000-096Drowzee_RB.png", "label": "Drowzee", "shape": "image"}, {"color": "#97c2fc", "id": "Dugtrio", "image": "PokemonData\\Dugtrio\\000-051Dugtrio_RB.png", "label": "Dugtrio", "shape": "image"}, {"color": "#97c2fc", "id": "Eevee", "image": "PokemonData\\Eevee\\000-133Eevee_Channel.png", "label": "Eevee", "shape": "image"}, {"color": "#97c2fc", "id": "Ekans", "image": "PokemonData\\Ekans\\000-023Ekans_RB.png", "label": "Ekans", "shape": "image"}, {"color": "#97c2fc", "id": "Electabuzz", "image": "PokemonData\\Electabuzz\\000-125Electabuzz_RB.png", "label": "Electabuzz", "shape": "image"}, {"color": "#97c2fc", "id": "Electrode", "image": "PokemonData\\Electrode\\000-101Electrode_RB.png", "label": "Electrode", "shape": "image"}, {"color": "#97c2fc", "id": "Exeggcute", "image": "PokemonData\\Exeggcute\\000-102Exeggcute_RB.png", "label": "Exeggcute", "shape": "image"}, {"color": "#97c2fc", "id": "Exeggutor", "image": "PokemonData\\Exeggutor\\000-103Exeggutor_Channel.png", "label": "Exeggutor", "shape": "image"}, {"color": "#97c2fc", "id": "Farfetchd", "image": "PokemonData\\Farfetchd\\000-083Farfetch%27d_RB.png", "label": "Farfetchd", "shape": "image"}, {"color": "#97c2fc", "id": "Fearow", "image": "PokemonData\\Fearow\\000-022Fearow_RB.png", "label": "Fearow", "shape": "image"}, {"color": "#97c2fc", "id": "Flareon", "image": "PokemonData\\Flareon\\000-136Flareon_RB.png", "label": "Flareon", "shape": "image"}, {"color": "#97c2fc", "id": "Gastly", "image": "PokemonData\\Gastly\\000-092Gastly_RB.png", "label": "Gastly", "shape": "image"}, {"color": "#97c2fc", "id": "Gengar", "image": "PokemonData\\Gengar\\000-094Gengar_Channel.png", "label": "Gengar", "shape": "image"}, {"color": "#97c2fc", "id": "Geodude", "image": "PokemonData\\Geodude\\000-074Geodude_RB.png", "label": "Geodude", "shape": "image"}, {"color": "#97c2fc", "id": "Gloom", "image": "PokemonData\\Gloom\\000-044Gloom_Channel.png", "label": "Gloom", "shape": "image"}, {"color": "#97c2fc", "id": "Golbat", "image": "PokemonData\\Golbat\\000-042Golbat_Channel.png", "label": "Golbat", "shape": "image"}, {"color": "#97c2fc", "id": "Goldeen", "image": "PokemonData\\Goldeen\\000-118Goldeen_Channel.png", "label": "Goldeen", "shape": "image"}, {"color": "#97c2fc", "id": "Golduck", "image": "PokemonData\\Golduck\\000-055Golduck_RB.png", "label": "Golduck", "shape": "image"}, {"color": "#97c2fc", "id": "Golem", "image": "PokemonData\\Golem\\000-076Golem_RB.png", "label": "Golem", "shape": "image"}, {"color": "#97c2fc", "id": "Graveler", "image": "PokemonData\\Graveler\\000-075Graveler_RB.png", "label": "Graveler", "shape": "image"}, {"color": "#97c2fc", "id": "Grimer", "image": "PokemonData\\Grimer\\000-088Grimer_RB.png", "label": "Grimer", "shape": "image"}, {"color": "#97c2fc", "id": "Growlithe", "image": "PokemonData\\Growlithe\\000-058Growlithe_RB.png", "label": "Growlithe", "shape": "image"}, {"color": "#97c2fc", "id": "Gyarados", "image": "PokemonData\\Gyarados\\000-130Gyarados_RB.png", "label": "Gyarados", "shape": "image"}, {"color": "#97c2fc", "id": "Haunter", "image": "PokemonData\\Haunter\\000-093Haunter_RB.png", "label": "Haunter", "shape": "image"}, {"color": "#97c2fc", "id": "Hitmonchan", "image": "PokemonData\\Hitmonchan\\000-107Hitmonchan_RB.png", "label": "Hitmonchan", "shape": "image"}, {"color": "#97c2fc", "id": "Hitmonlee", "image": "PokemonData\\Hitmonlee\\000-106Hitmonlee_RB.png", "label": "Hitmonlee", "shape": "image"}, {"color": "#97c2fc", "id": "Horsea", "image": "PokemonData\\Horsea\\000-116Horsea_C.png", "label": "Horsea", "shape": "image"}, {"color": "#97c2fc", "id": "Hypno", "image": "PokemonData\\Hypno\\000-097Hypno_RB.png", "label": "Hypno", "shape": "image"}, {"color": "#97c2fc", "id": "Ivysaur", "image": "PokemonData\\Ivysaur\\000-002Ivysaur_RB.png", "label": "Ivysaur", "shape": "image"}, {"color": "#97c2fc", "id": "Jigglypuff", "image": "PokemonData\\Jigglypuff\\000-039Jigglypuff_Channel_2.png", "label": "Jigglypuff", "shape": "image"}, {"color": "#97c2fc", "id": "Jolteon", "image": "PokemonData\\Jolteon\\000-135Jolteon_RB.png", "label": "Jolteon", "shape": "image"}, {"color": "#97c2fc", "id": "Jynx", "image": "PokemonData\\Jynx\\000-124Jynx_C.png", "label": "Jynx", "shape": "image"}, {"color": "#97c2fc", "id": "Kabuto", "image": "PokemonData\\Kabuto\\000-140Kabuto_RB.png", "label": "Kabuto", "shape": "image"}, {"color": "#97c2fc", "id": "Kabutops", "image": "PokemonData\\Kabutops\\000-141Kabutops_RB.png", "label": "Kabutops", "shape": "image"}, {"color": "#97c2fc", "id": "Kadabra", "image": "PokemonData\\Kadabra\\000-064Kadabra_RB.png", "label": "Kadabra", "shape": "image"}, {"color": "#97c2fc", "id": "Kakuna", "image": "PokemonData\\Kakuna\\000-014Kakuna_RB.png", "label": "Kakuna", "shape": "image"}, {"color": "#97c2fc", "id": "Kangaskhan", "image": "PokemonData\\Kangaskhan\\000-115Kangaskhan_RB.png", "label": "Kangaskhan", "shape": "image"}, {"color": "#97c2fc", "id": "Kingler", "image": "PokemonData\\Kingler\\000-099Kingler_RB.png", "label": "Kingler", "shape": "image"}, {"color": "#97c2fc", "id": "Koffing", "image": "PokemonData\\Koffing\\000-109Koffing_RB.png", "label": "Koffing", "shape": "image"}, {"color": "#97c2fc", "id": "Krabby", "image": "PokemonData\\Krabby\\000-098Krabby_RB.png", "label": "Krabby", "shape": "image"}, {"color": "#97c2fc", "id": "Lapras", "image": "PokemonData\\Lapras\\000-131Lapras_RB.png", "label": "Lapras", "shape": "image"}, {"color": "#97c2fc", "id": "Lickitung", "image": "PokemonData\\Lickitung\\000-108Lickitung_Channel.png", "label": "Lickitung", "shape": "image"}, {"color": "#97c2fc", "id": "Machamp", "image": "PokemonData\\Machamp\\000-068Machamp_RB.png", "label": "Machamp", "shape": "image"}, {"color": "#97c2fc", "id": "Machoke", "image": "PokemonData\\Machoke\\000-067Machoke_RB.png", "label": "Machoke", "shape": "image"}, {"color": "#97c2fc", "id": "Machop", "image": "PokemonData\\Machop\\001-066Machop_RB.png", "label": "Machop", "shape": "image"}, {"color": "#97c2fc", "id": "Magikarp", "image": "PokemonData\\Magikarp\\000-129Magikarp_Channel.png", "label": "Magikarp", "shape": "image"}, {"color": "#97c2fc", "id": "Magmar", "image": "PokemonData\\Magmar\\000-126Magmar_RB.png", "label": "Magmar", "shape": "image"}, {"color": "#97c2fc", "id": "Magnemite", "image": "PokemonData\\Magnemite\\002-081Magnemite_RB.png", "label": "Magnemite", "shape": "image"}, {"color": "#97c2fc", "id": "Magneton", "image": "PokemonData\\Magneton\\000-082Magneton_RB.png", "label": "Magneton", "shape": "image"}, {"color": "#97c2fc", "id": "Mankey", "image": "PokemonData\\Mankey\\000-056Mankey_RB.png", "label": "Mankey", "shape": "image"}, {"color": "#97c2fc", "id": "Marowak", "image": "PokemonData\\Marowak\\000-105Marowak_RB.png", "label": "Marowak", "shape": "image"}, {"color": "#97c2fc", "id": "Meowth", "image": "PokemonData\\Meowth\\001-052Meowth_Channel.png", "label": "Meowth", "shape": "image"}, {"color": "#97c2fc", "id": "Metapod", "image": "PokemonData\\Metapod\\000-011Metapod_RB.png", "label": "Metapod", "shape": "image"}, {"color": "#97c2fc", "id": "Mew", "image": "PokemonData\\Mew\\000-151Mew_RB.png", "label": "Mew", "shape": "image"}, {"color": "#97c2fc", "id": "Mewtwo", "image": "PokemonData\\Mewtwo\\000-150Mewtwo_RB.png", "label": "Mewtwo", "shape": "image"}, {"color": "#97c2fc", "id": "Moltres", "image": "PokemonData\\Moltres\\000-146Moltres_RB.png", "label": "Moltres", "shape": "image"}, {"color": "#97c2fc", "id": "MrMime", "image": "PokemonData\\MrMime\\001-122Mr._Mime_RB.png", "label": "MrMime", "shape": "image"}, {"color": "#97c2fc", "id": "Muk", "image": "PokemonData\\Muk\\000-089Muk_RB.png", "label": "Muk", "shape": "image"}, {"color": "#97c2fc", "id": "Nidoking", "image": "PokemonData\\Nidoking\\000-034Nidoking_RB.png", "label": "Nidoking", "shape": "image"}, {"color": "#97c2fc", "id": "Nidoqueen", "image": "PokemonData\\Nidoqueen\\000-031Nidoqueen_RB.png", "label": "Nidoqueen", "shape": "image"}, {"color": "#97c2fc", "id": "Nidoran-f", "image": "PokemonData\\Nidoran-f\\Nidoran-f1.jpg", "label": "Nidoran-f", "shape": "image"}, {"color": "#97c2fc", "id": "Nidoran-m", "image": "PokemonData\\Nidoran-m\\Nidoran-m1.jpg", "label": "Nidoran-m", "shape": "image"}, {"color": "#97c2fc", "id": "Nidorina", "image": "PokemonData\\Nidorina\\000-030Nidorina_RB.png", "label": "Nidorina", "shape": "image"}, {"color": "#97c2fc", "id": "Nidorino", "image": "PokemonData\\Nidorino\\000-033Nidorino_RB.png", "label": "Nidorino", "shape": "image"}, {"color": "#97c2fc", "id": "Ninetales", "image": "PokemonData\\Ninetales\\000-038Ninetales_RB.png", "label": "Ninetales", "shape": "image"}, {"color": "#97c2fc", "id": "Oddish", "image": "PokemonData\\Oddish\\000-043Oddish_Channel.png", "label": "Oddish", "shape": "image"}, {"color": "#97c2fc", "id": "Omanyte", "image": "PokemonData\\Omanyte\\000-138Omanyte_RB.png", "label": "Omanyte", "shape": "image"}, {"color": "#97c2fc", "id": "Omastar", "image": "PokemonData\\Omastar\\000-139Omastar_RB.png", "label": "Omastar", "shape": "image"}, {"color": "#97c2fc", "id": "Onix", "image": "PokemonData\\Onix\\000-095Onix_RB.png", "label": "Onix", "shape": "image"}, {"color": "#97c2fc", "id": "Paras", "image": "PokemonData\\Paras\\000-046Paras_RB.png", "label": "Paras", "shape": "image"}, {"color": "#97c2fc", "id": "Parasect", "image": "PokemonData\\Parasect\\000-047Parasect_RB.png", "label": "Parasect", "shape": "image"}, {"color": "#97c2fc", "id": "Persian", "image": "PokemonData\\Persian\\000-053Persian_RB.png", "label": "Persian", "shape": "image"}, {"color": "#97c2fc", "id": "Pidgeot", "image": "PokemonData\\Pidgeot\\000-018Pidgeot_RB.png", "label": "Pidgeot", "shape": "image"}, {"color": "#97c2fc", "id": "Pidgeotto", "image": "PokemonData\\Pidgeotto\\000-017Pidgeotto_RB.png", "label": "Pidgeotto", "shape": "image"}, {"color": "#97c2fc", "id": "Pidgey", "image": "PokemonData\\Pidgey\\000-016Pidgey_Channel.png", "label": "Pidgey", "shape": "image"}, {"color": "#97c2fc", "id": "Pikachu", "image": "PokemonData\\Pikachu\\000-025Pikachu_Channel_2.png", "label": "Pikachu", "shape": "image"}, {"color": "#97c2fc", "id": "Pinsir", "image": "PokemonData\\Pinsir\\000-127Pinsir_RB.png", "label": "Pinsir", "shape": "image"}, {"color": "#97c2fc", "id": "Poliwag", "image": "PokemonData\\Poliwag\\001-060Poliwag_RB.png", "label": "Poliwag", "shape": "image"}, {"color": "#97c2fc", "id": "Poliwhirl", "image": "PokemonData\\Poliwhirl\\000-061Poliwhirl_RB.png", "label": "Poliwhirl", "shape": "image"}, {"color": "#97c2fc", "id": "Poliwrath", "image": "PokemonData\\Poliwrath\\000-062Poliwrath_RB.png", "label": "Poliwrath", "shape": "image"}, {"color": "#97c2fc", "id": "Ponyta", "image": "PokemonData\\Ponyta\\000-077Ponyta_RB.png", "label": "Ponyta", "shape": "image"}, {"color": "#97c2fc", "id": "Porygon", "image": "PokemonData\\Porygon\\000-137Porygon_RB.png", "label": "Porygon", "shape": "image"}, {"color": "#97c2fc", "id": "Primeape", "image": "PokemonData\\Primeape\\000-057Primeape_RB.png", "label": "Primeape", "shape": "image"}, {"color": "#97c2fc", "id": "Psyduck", "image": "PokemonData\\Psyduck\\001-054Psyduck_RB.png", "label": "Psyduck", "shape": "image"}, {"color": "#97c2fc", "id": "Raichu", "image": "PokemonData\\Raichu\\002-026Raichu_RB.png", "label": "Raichu", "shape": "image"}, {"color": "#97c2fc", "id": "Rapidash", "image": "PokemonData\\Rapidash\\000-078Rapidash_RB.png", "label": "Rapidash", "shape": "image"}, {"color": "#97c2fc", "id": "Raticate", "image": "PokemonData\\Raticate\\000-020Raticate_RB.png", "label": "Raticate", "shape": "image"}, {"color": "#97c2fc", "id": "Rattata", "image": "PokemonData\\Rattata\\000-019Rattata_RB.png", "label": "Rattata", "shape": "image"}, {"color": "#97c2fc", "id": "Rhydon", "image": "PokemonData\\Rhydon\\000-112Rhydon_RB.png", "label": "Rhydon", "shape": "image"}, {"color": "#97c2fc", "id": "Rhyhorn", "image": "PokemonData\\Rhyhorn\\000-111Rhyhorn_RB.png", "label": "Rhyhorn", "shape": "image"}, {"color": "#97c2fc", "id": "Sandshrew", "image": "PokemonData\\Sandshrew\\000-027Sandshrew_RB.png", "label": "Sandshrew", "shape": "image"}, {"color": "#97c2fc", "id": "Sandslash", "image": "PokemonData\\Sandslash\\000-028Sandslash_RB.png", "label": "Sandslash", "shape": "image"}, {"color": "#97c2fc", "id": "Scyther", "image": "PokemonData\\Scyther\\000-123Scyther_RB.png", "label": "Scyther", "shape": "image"}, {"color": "#97c2fc", "id": "Seadra", "image": "PokemonData\\Seadra\\000-117Seadra_RB.png", "label": "Seadra", "shape": "image"}, {"color": "#97c2fc", "id": "Seaking", "image": "PokemonData\\Seaking\\000-119Seaking_RG.png", "label": "Seaking", "shape": "image"}, {"color": "#97c2fc", "id": "Seel", "image": "PokemonData\\Seel\\000-086Seel_RB.png", "label": "Seel", "shape": "image"}, {"color": "#97c2fc", "id": "Shellder", "image": "PokemonData\\Shellder\\000-090Shellder_RB.png", "label": "Shellder", "shape": "image"}, {"color": "#97c2fc", "id": "Slowbro", "image": "PokemonData\\Slowbro\\000-080Slowbro_RB.png", "label": "Slowbro", "shape": "image"}, {"color": "#97c2fc", "id": "Slowpoke", "image": "PokemonData\\Slowpoke\\000-079Slowpoke_RB.png", "label": "Slowpoke", "shape": "image"}, {"color": "#97c2fc", "id": "Snorlax", "image": "PokemonData\\Snorlax\\000-143Snorlax_Channel.png", "label": "Snorlax", "shape": "image"}, {"color": "#97c2fc", "id": "Spearow", "image": "PokemonData\\Spearow\\000-021Spearow_RB.png", "label": "Spearow", "shape": "image"}, {"color": "#97c2fc", "id": "Squirtle", "image": "PokemonData\\Squirtle\\000-007Squirtle_Channel_2.png", "label": "Squirtle", "shape": "image"}, {"color": "#97c2fc", "id": "Starmie", "image": "PokemonData\\Starmie\\000-121Starmie_RB.png", "label": "Starmie", "shape": "image"}, {"color": "#97c2fc", "id": "Staryu", "image": "PokemonData\\Staryu\\001-120Staryu_RB.png", "label": "Staryu", "shape": "image"}, {"color": "#97c2fc", "id": "Tangela", "image": "PokemonData\\Tangela\\000-114Tangela_RB.png", "label": "Tangela", "shape": "image"}, {"color": "#97c2fc", "id": "Tauros", "image": "PokemonData\\Tauros\\000-128Tauros_RB.png", "label": "Tauros", "shape": "image"}, {"color": "#97c2fc", "id": "Tentacool", "image": "PokemonData\\Tentacool\\000-072Tentacool_RB.png", "label": "Tentacool", "shape": "image"}, {"color": "#97c2fc", "id": "Tentacruel", "image": "PokemonData\\Tentacruel\\000-073Tentacruel_RB.png", "label": "Tentacruel", "shape": "image"}, {"color": "#97c2fc", "id": "Vaporeon", "image": "PokemonData\\Vaporeon\\000-134Vaporeon_RB.png", "label": "Vaporeon", "shape": "image"}, {"color": "#97c2fc", "id": "Venomoth", "image": "PokemonData\\Venomoth\\000-049Venomoth_RB.png", "label": "Venomoth", "shape": "image"}, {"color": "#97c2fc", "id": "Venonat", "image": "PokemonData\\Venonat\\000-048Venonat_RB.png", "label": "Venonat", "shape": "image"}, {"color": "#97c2fc", "id": "Venusaur", "image": "PokemonData\\Venusaur\\000-003Venusaur_RB.png", "label": "Venusaur", "shape": "image"}, {"color": "#97c2fc", "id": "Victreebel", "image": "PokemonData\\Victreebel\\000-071Victreebel_RB.png", "label": "Victreebel", "shape": "image"}, {"color": "#97c2fc", "id": "Vileplume", "image": "PokemonData\\Vileplume\\000-045Vileplume_RB.png", "label": "Vileplume", "shape": "image"}, {"color": "#97c2fc", "id": "Voltorb", "image": "PokemonData\\Voltorb\\000-100Voltorb_RB.png", "label": "Voltorb", "shape": "image"}, {"color": "#97c2fc", "id": "Vulpix", "image": "PokemonData\\Vulpix\\000-037Vulpix_Channel.png", "label": "Vulpix", "shape": "image"}, {"color": "#97c2fc", "id": "Wartortle", "image": "PokemonData\\Wartortle\\000-008Wartortle_RB.png", "label": "Wartortle", "shape": "image"}, {"color": "#97c2fc", "id": "Weedle", "image": "PokemonData\\Weedle\\000-013Weedle_RB.png", "label": "Weedle", "shape": "image"}, {"color": "#97c2fc", "id": "Weepinbell", "image": "PokemonData\\Weepinbell\\000-070Weepinbell_RB.png", "label": "Weepinbell", "shape": "image"}, {"color": "#97c2fc", "id": "Weezing", "image": "PokemonData\\Weezing\\000-110Weezing_RB.png", "label": "Weezing", "shape": "image"}, {"color": "#97c2fc", "id": "Wigglytuff", "image": "PokemonData\\Wigglytuff\\000-040Wigglytuff_RB.png", "label": "Wigglytuff", "shape": "image"}, {"color": "#97c2fc", "id": "Zapdos", "image": "PokemonData\\Zapdos\\000-145Zapdos_RB.png", "label": "Zapdos", "shape": "image"}, {"color": "#97c2fc", "id": "Zubat", "image": "PokemonData\\Zubat\\000-041Zubat_Channel.png", "label": "Zubat", "shape": "image"}, {"color": "#97c2fc", "id": "Meicoomon", "image": "digimon\\Meicoomon.jpg", "label": "Meicoomon", "shape": "image"}, {"color": "#97c2fc", "id": "Parrotmon", "image": "digimon\\Parrotmon.jpg", "label": "Parrotmon", "shape": "image"}, {"color": "#97c2fc", "id": "Archnemon", "image": "digimon\\Archnemon.jpg", "label": "Archnemon", "shape": "image"}]);
+                  edges = new vis.DataSet([{"from": "Meicoomon", "to": "Nidorino"}, {"from": "Meicoomon", "to": "Lapras"}, {"from": "Meicoomon", "to": "Venomoth"}, {"from": "Parrotmon", "to": "Primeape"}, {"from": "Parrotmon", "to": "Doduo"}, {"from": "Parrotmon", "to": "Caterpie"}, {"from": "Archnemon", "to": "Charizard"}, {"from": "Archnemon", "to": "Shellder"}, {"from": "Archnemon", "to": "Nidoqueen"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -80000,
+            "springConstant": 0.001,
+            "springLength": 250
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
